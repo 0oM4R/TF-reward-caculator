@@ -19,8 +19,28 @@ cd ts-v4-rewards
 
 # Install dependencies
 yarn install
-
 ```
+
+## Examples
+
+The project includes examples that demonstrate how to use the calculator:
+
+### Annual Rewards Example
+
+This example calculates the annual INCA rewards and income distribution for a node with specific hardware configuration:
+
+```bash
+yarn 
+
+# Run the example
+yarn run ts-node examples/annualRewards.ts
+```
+
+The example shows:
+
+- Annual INCA rewards calculation for a specified node configuration
+- Breakdown of rewards by resource (memory, SSD, HDD, network)
+- Income distribution between farmer, farming pool, and ThreeFold
 
 ## API Reference
 
