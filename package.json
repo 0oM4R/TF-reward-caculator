@@ -1,0 +1,12 @@
+{
+  "name": "ts-v4-rewards",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Omar Kassem <omarksm09@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
