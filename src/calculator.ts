@@ -14,22 +14,80 @@ import {
   IncomeDistribution,
 } from './types';
 
+import { validateUptimePercentage } from './validator';
+
 /**
  * Calculate annual INCA rewards for a single node based on its configuration
  * 
  * @param nodeConfig The node configuration parameters
  * @returns The annual INCA rewards breakdown by resource type
  */
-export function calculateAnnualIncaRewards(nodeConfig: NodeConfig): IncaRewards {
+export function calculateAnnualIncaRewards(nodeConfig: NodeConfig, uptimePercentage: number): IncaRewards {
   const { gb_mem, tb_ssd, tb_hdd, tb_network } = nodeConfig;
   
+  // Validate uptime percentage
+  const uptimeValidation = validateUptimePercentage(uptimePercentage);
+  if (!uptimeValidation.isValid) {
+    console.warn(uptimeValidation.message);
+    return {
+      mem_inca_rewards: 0,
+      ssd_inca_rewards: 0,
+      hdd_inca_rewards: 0,
+      network_inca_rewards: 0,
+      total_inca_rewards: 0
+    };
+  }
   // Calculate annual INCA rewards by resource type
-  const mem_inca_rewards = gb_mem * CERTIFIED_REWARDS.MEM_PER_GB_MONTH * 12;
-  const ssd_inca_rewards = tb_ssd * CERTIFIED_REWARDS.SSD_PER_TB_MONTH * 12;
-  const hdd_inca_rewards = tb_hdd * CERTIFIED_REWARDS.HDD_PER_TB_MONTH * 12;
-  const network_inca_rewards = tb_network * CERTIFIED_REWARDS.NETWORK_PER_TB_MONTH * 12;
+  const mem_inca_rewards = gb_mem * CERTIFIED_REWARDS.MEM_PER_GB_MONTH * 12 * uptimePercentage / 100;
+  const ssd_inca_rewards = tb_ssd * CERTIFIED_REWARDS.SSD_PER_TB_MONTH * 12 * uptimePercentage / 100;
+  const hdd_inca_rewards = tb_hdd * CERTIFIED_REWARDS.HDD_PER_TB_MONTH * 12 * uptimePercentage / 100;
+  const network_inca_rewards = tb_network * CERTIFIED_REWARDS.NETWORK_PER_TB_MONTH * 12 * uptimePercentage / 100;
   
   // Calculate total annual INCA rewards
+  const total_inca_rewards = 
+    mem_inca_rewards +
+    ssd_inca_rewards +
+    hdd_inca_rewards +
+    network_inca_rewards;
+  
+  return {
+    mem_inca_rewards,
+    ssd_inca_rewards,
+    hdd_inca_rewards,
+    network_inca_rewards,
+    total_inca_rewards
+  };
+}
+
+/**
+ * Calculate monthly INCA rewards for a single node based on its configuration
+ * 
+ * @param nodeConfig The node configuration parameters
+ * @param uptimePercentage The node's uptime percentage for the month
+ * @returns The monthly INCA rewards breakdown by resource type
+ */
+export function calculateMonthlyIncaRewards(nodeConfig: NodeConfig, uptimePercentage: number): IncaRewards {
+  const { gb_mem, tb_ssd, tb_hdd, tb_network } = nodeConfig;
+  
+  // Validate uptime percentage
+  const uptimeValidation = validateUptimePercentage(uptimePercentage);
+  if (!uptimeValidation.isValid) {
+    console.warn(uptimeValidation.message);
+    return {
+      mem_inca_rewards: 0,
+      ssd_inca_rewards: 0,
+      hdd_inca_rewards: 0,
+      network_inca_rewards: 0,
+      total_inca_rewards: 0
+    };
+  }
+  // Calculate monthly INCA rewards by resource type
+  const mem_inca_rewards = gb_mem * CERTIFIED_REWARDS.MEM_PER_GB_MONTH * uptimePercentage / 100;
+  const ssd_inca_rewards = tb_ssd * CERTIFIED_REWARDS.SSD_PER_TB_MONTH * uptimePercentage / 100;
+  const hdd_inca_rewards = tb_hdd * CERTIFIED_REWARDS.HDD_PER_TB_MONTH * uptimePercentage / 100;
+  const network_inca_rewards = tb_network * CERTIFIED_REWARDS.NETWORK_PER_TB_MONTH * uptimePercentage / 100;
+  
+  // Calculate total monthly INCA rewards
   const total_inca_rewards = 
     mem_inca_rewards +
     ssd_inca_rewards +
