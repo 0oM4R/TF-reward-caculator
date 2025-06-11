@@ -18,6 +18,11 @@ export const CERTIFIED_REWARDS = {
   NETWORK_PER_TB_MONTH: 30.0, // INCA
 };
 
+/**
+ * Minimum required uptime percentage for rewards
+ */
+export const MIN_UPTIME_PERCENTAGE = 90;
+
 // Minimum requirements
 export const MIN_REQUIREMENTS = {
   CPU_PASSMARK_PER_GB_MEM: 200,

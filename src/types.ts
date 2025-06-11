@@ -41,5 +41,5 @@ export interface IncomeDistribution {
  */
 export interface ValidationResult {
   isValid: boolean;
-  messages: string[];
+  message: string;
 }
